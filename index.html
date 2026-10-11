@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>رحلة الجزيئات – تفسير تغيّرات الحالة</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap">
+<style>
+:root{--bg:#f2f6f4;--fg:#0d2b30;--card:#fff;--ac:#a8641a;--mut:#4d6468;--cv:#e4eef0;--ln:#2f6f78;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b2226;--fg:#f1e8d2;--card:#12353b;--ac:#efb653;--mut:#9db8bb;--cv:#0f2d33;--ln:#6fb5bf}}
+:root[data-theme="dark"]{--bg:#0b2226;--fg:#f1e8d2;--card:#12353b;--ac:#efb653;--mut:#9db8bb;--cv:#0f2d33;--ln:#6fb5bf}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:Tajawal,"Segoe UI",Tahoma,sans-serif}
+.w{max-width:460px;margin:0 auto;padding:10px 12px 18px}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--mut);margin-bottom:8px}
+.stage{position:relative;border-radius:14px;overflow:hidden;background:var(--cv)}
+canvas{display:block;width:100%;height:auto}
+.big{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(8,28,32,.55);border:0;width:100%;color:#fff;font:800 20px Tajawal,sans-serif;cursor:pointer}
+.big span{background:var(--ac);color:#102a2e;padding:12px 22px;border-radius:40px}
+.cap{background:var(--card);border-radius:14px;padding:14px 16px;margin-top:10px;min-height:170px}
+.cap h2{margin:0 0 6px;font-size:22px;font-weight:800}
+.term{display:inline-block;direction:ltr;background:var(--ac);color:#102a2e;font-weight:700;padding:1px 10px;border-radius:20px;font-size:14px;margin-inline-start:8px;vertical-align:middle}
+.env{color:var(--ac);font-weight:700;font-size:14px;margin:0 0 8px}
+.tx{font-size:17px;line-height:1.75;margin:0}
+.q{margin:10px 0 0;color:var(--mut);font-size:14px}
+.bar{height:4px;background:var(--cv);border-radius:4px;margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--ac)}
+.ctl{display:flex;gap:8px;align-items:center;margin-top:10px}
+.ctl button{border:0;background:var(--card);color:var(--fg);font:700 16px Tajawal,sans-serif;border-radius:12px;padding:10px 14px;cursor:pointer;min-height:44px}
+.ctl .p{background:var(--ac);color:#102a2e;flex:1}
+.dots{display:flex;gap:6px;justify-content:center;margin-top:10px}
+.dots b{width:10px;height:10px;border-radius:50%;background:var(--cv);border:1px solid var(--ln);cursor:pointer}
+.dots b.on{background:var(--ac);border-color:var(--ac)}
+label{font-size:13px;color:var(--mut);display:flex;gap:6px;align-items:center}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style></head><body><div class="w">
+<div class="top"><span>الصف السابع – حالات المادة ٢-٤</span><label><input type="checkbox" id="tts"> 🔊 تعليق صوتي</label></div>
+<div class="stage"><canvas id="c"></canvas><button class="big" id="go"><span>▶ شغّلي الفيديو</span></button></div>
+<div class="cap"><h2 id="n"></h2><p class="env" id="v"></p><p class="tx" id="t"></p><p class="q" id="q"></p><div class="bar"><i id="b"></i></div></div>
+<div class="ctl"><button id="pv">⏮</button><button class="p" id="pl">⏸ إيقاف</button><button id="nx">⏭</button></div>
+<div class="dots" id="d"></div>
+</div>
+<script>
+const cv=document.getElementById('c'),x=cv.getContext('2d'),W=360,H=440;cv.width=W*2;cv.height=H*2;x.scale(2,2);
+const S=[
+{n:'رحلة الجزيئات',tx:'كيف يتحول بخار ورد الجبل الأخضر إلى ماء ورد؟ لنتتبّع الجزيئات خطوة بخطوة.',q:'❓ اكتبي توقعك على الورقة اللاصقة.',e:.1,d:7},
+{n:'المادة الصلبة',term:'Solid',v:'من بيئتنا: قطعة لبان ظفار',tx:'تنتظم الجزيئات بنمط ثابت وتهتز في أماكنها، وقوى الجذب بينها قوية.',q:'❓ هل تغادر الجزيئات أماكنها؟',e:.1,d:8},
+{n:'التمدّد',term:'Expand',v:'من بيئتنا: أسلاك الكهرباء في صيف عُمان',tx:'عند التسخين تهتز الجزيئات بقدر أكبر وتشغل حيّزًا أكبر، فتتمدد المادة.',q:'❓ لماذا زاد الحيّز؟',e:.28,h:'h',d:8},
+{n:'الانصهار',term:'Melt',v:'من بيئتنا: الحلوى العمانية، السكر والسمن على النار',tx:'تزداد الطاقة فتضعف قوى الجذب، فتنزلق الجزيئات الواحدة تلو الأخرى وتصبح المادة سائلة.',q:'❓ ماذا حدث لترتيب الجزيئات؟',e:.5,h:'h',d:9},
+{n:'الغليان',term:'Boil',v:'من بيئتنا: غلي ورد الجبل الأخضر',tx:'مع زيادة التسخين يكتسب بعض الجزيئات طاقة كافية لكسر قوى الجذب الضعيفة، فتهرب إلى الهواء غازًا.',q:'❓ أي الجزيئات تهرب أولًا؟',e:.97,h:'h',d:10},
+{n:'التكثّف',term:'Condense',v:'من بيئتنا: بخار الورد يلامس سطحًا باردًا فيصير ماء ورد',tx:'عند اصطدام الغاز بسطح بارد تنتقل جزء من طاقته إلى السطح، فتقل حركة الجزيئات وتقترب من بعضها وتتكوّن سائلًا.',q:'❓ إلى أين انتقلت الطاقة؟',e:.97,h:'h',cond:1,d:12},
+{n:'التجمّد',term:'Freeze',v:'من بيئتنا: تبرد الحلوى العمانية فتتصلب',tx:'عند التبريد تنتقل الطاقة إلى البيئة فتبطؤ الجزيئات، وفي النهاية لا تستطيع إلا أن تهتز في أماكنها فتتكوّن مادة صلبة.',q:'❓ ماذا حدث للطاقة؟',e:.08,h:'c',d:11},
+{n:'الخلاصة',tx:'التسخين: تمدّد ← انصهار ← غليان.\nالتبريد: تكثّف ← تجمّد.\nالطاقة الحرارية تتحكم في حركة الجزيئات.',q:'❓ اختاري تغيّرًا وفسّريه بجملتين.',e:.08,d:9}];
+const N=60,homes=[],P=[];
+for(let k=0;k<N;k++){const r=Math.floor(k/10),c=k%10;homes.push({x:180+(c-4.5)*23+(r%2)*6,y:388-r*20})}
+for(let i=0;i<N;i++)P.push({x:homes[i].x,y:homes[i].y,vx:0,vy:0,th:.6+.3*Math.random(),f:false,s:i});
+let si=0,st=0,play=false,e=.1,T=0,cc=0,acc=0,lt=0;
+const $=id=>document.getElementById(id),sm=t=>t<=0?0:t>=1?1:t*t*(3-2*t);
+const dots=$('d');S.forEach((_,i)=>{const b=document.createElement('b');b.onclick=()=>set(i);dots.appendChild(b)});
+function set(i){si=Math.max(0,Math.min(S.length-1,i));st=0;cc=0;P.forEach((p,k)=>{p.f=false;p.s=k});const s=S[si];
+$('n').innerHTML=s.n+(s.term?'<span class="term">'+s.term+'</span>':'');$('v').textContent=s.v||'';$('t').innerHTML=s.tx.replace(/\n/g,'<br>');$('q').textContent=s.q||'';
+[...dots.children].forEach((b,k)=>b.className=k==si?'on':'');say(s.n+'. '+s.tx.replace(/\n/g,' '))}
+function say(t){try{speechSynthesis.cancel();if($('tts').checked&&play){const u=new SpeechSynthesisUtterance(t);u.lang='ar-SA';speechSynthesis.speak(u)}}catch(_){}}
+function upd(){const s=S[si];e+=(s.e-e)*.02;T+=1/60;const lw=sm((e-.25)/.2),ex=1+.2*Math.min(e,.3)/.3;
+for(const p of P){const free=!p.f&&e>p.th;
+if(free){p.vx+=(Math.random()-.5)*e*1.4;p.vy+=(Math.random()-.5)*e*1.4;let sp=Math.hypot(p.vx,p.vy);const mx=1.2+e*2.8;if(sp>mx){p.vx*=mx/sp;p.vy*=mx/sp}else if(sp<1.2){const a=Math.random()*6.28;p.vx=Math.cos(a)*1.4;p.vy=Math.sin(a)*1.4}
+p.x+=p.vx;p.y+=p.vy;if(p.x<30){p.x=30;p.vx=Math.abs(p.vx)}if(p.x>330){p.x=330;p.vx=-Math.abs(p.vx)}if(p.y>392){p.y=392;p.vy=-Math.abs(p.vy)}
+if(s.cond&&p.y<50){p.f=true;p.s=cc++;p.vx=p.vy=0}else if(p.y<40){p.y=40;p.vy=Math.abs(p.vy)}}
+else{const h=homes[p.s];let hx=180+(h.x-180)*ex,hy=400-(400-h.y)*ex;hx+=Math.sin(T*.9+p.s*1.7)*7*lw;hy+=Math.cos(T*.8+p.s*2.3)*4*lw;
+const k=p.f?.03:.13-.1*lw,kick=p.f?.15:.12+e*1.6;p.vx+=k*(hx-p.x)+(Math.random()-.5)*kick;p.vy+=k*(hy-p.y)+(Math.random()-.5)*kick;p.vx*=.82;p.vy*=.82;
+const sp=Math.hypot(p.vx,p.vy);if(sp>5){p.vx*=5/sp;p.vy*=5/sp}p.x+=p.vx;p.y+=p.vy}}}
+function draw(){const s=S[si];x.clearRect(0,0,W,H);x.lineWidth=3;x.strokeStyle='#6fb5bf';x.beginPath();x.moveTo(28,30);x.lineTo(28,400);x.lineTo(332,400);x.lineTo(332,30);x.stroke();
+if(s.cond){x.fillStyle='#7dd3fc';x.fillRect(28,28,304,16);x.font='14px sans-serif';x.fillText('❄ ❄ ❄ ❄ ❄ ❄ ❄',110,41)}
+x.font='26px sans-serif';if(s.h=='h'){x.fillText('🔥 🔥 🔥',118,432)}if(s.h=='c'){x.fillText('❄ ❄ ❄',128,432)}
+x.fillStyle='rgba(120,160,170,.35)';x.fillRect(8,60,8,340);x.fillStyle=`hsl(${225-e*195},80%,55%)`;x.fillRect(8,400-340*Math.min(e,1),8,340*Math.min(e,1));
+for(const p of P){x.fillStyle=p.f?'#7dd3fc':`hsl(${225-e*195},75%,48%)`;x.beginPath();x.arc(p.x,p.y,8,0,6.283);x.fill();x.fillStyle='rgba(255,255,255,.45)';x.beginPath();x.arc(p.x-2.5,p.y-2.5,2.5,0,6.283);x.fill()}}
+function loop(t){const dt=Math.min((t-lt)/1000||0,.1);lt=t;acc+=dt;while(acc>1/60){upd();acc-=1/60}
+if(play){st+=dt;if(st>=S[si].d){if(si<S.length-1)set(si+1);else{play=false;$('pl').textContent='↺ إعادة'}}}
+$('b').style.width=(100*Math.min(st/S[si].d,1))+'%';draw();requestAnimationFrame(loop)}
+$('go').onclick=()=>{$('go').style.display='none';play=true;set(0)};
+$('pl').onclick=()=>{if(si==S.length-1&&!play){play=true;set(0);$('pl').textContent='⏸ إيقاف';return}play=!play;$('pl').textContent=play?'⏸ إيقاف':'▶ تشغيل';if(!play){try{speechSynthesis.cancel()}catch(_){}}else say(S[si].tx)};
+$('nx').onclick=()=>set(si+1);$('pv').onclick=()=>set(si-1);
+set(0);requestAnimationFrame(loop);
+</script></body></html>
